@@ -8,7 +8,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="fsv.a5us.touristsimple.MainActivity">
+    tools:context="fsv.a5us.touristsimple.MainActivity"
+    android:layout_marginTop="@dimen/aMinusMargin"
+    android:layout_marginRight="@dimen/aMinusMargin"
+    android:layout_marginLeft="@dimen/aMinusMargin">
 
     <ListView
         android:layout_width="match_parent"
@@ -23,5 +26,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/progressBar1"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp" />
 </RelativeLayout>

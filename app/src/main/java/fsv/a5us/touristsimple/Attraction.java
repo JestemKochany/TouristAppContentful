@@ -1,10 +1,12 @@
 package fsv.a5us.touristsimple;
 
+import java.io.Serializable;
+
 /**
  * Created by A5US on 06.01.2017.
  */
 
-public class Attraction{
+public class Attraction implements Serializable{
 
     private String attractionType;
     private String name;

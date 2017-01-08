@@ -7,6 +7,9 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -45,27 +48,45 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent AttractionDetails = new Intent(MainActivity.this,AttractionDetailsActivity.class);
-                startActivity(AttractionDetails);
-                //finish();
+                Log.d("Klik position: " + position, view.toString());
+
+                Intent ActivityAttractionDetails = new Intent(MainActivity.this,AttractionDetailsActivity.class);
+                Attraction clickedAttraction = attractions.get(position);
+                ActivityAttractionDetails.putExtra("attraction", clickedAttraction);
+                startActivity(ActivityAttractionDetails);
+                finish();
             }
         });
 
+        LoadAttractions();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        attractions.clear();
+        listView.setAdapter(null);
+        LoadAttractions();
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void LoadAttractions(){
+        mProgressBar.setVisibility(View.VISIBLE);
         if( isOnline() ){
             ReadJSON task = new ReadJSON();
             task.execute("https://quarkbackend.com/getfile/tbuslowski/json1");
-            //runOnUiThread(new Runnable() {
-            //    @Override
-            //    public void run() {
-            //       new ReadJSON().execute("https://quarkbackend.com/getfile/tbuslowski/json1");
-            //    }
-            //});
         } else{
             mProgressBar.setVisibility(View.GONE);
             Toast.makeText(MainActivity.this.getApplicationContext(), "Aby pobrać zdjęcia, musisz się połączyć z siecią.", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     public boolean isOnline(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);

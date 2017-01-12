@@ -45,7 +45,12 @@ public class CustomListAdapter extends ArrayAdapter<Attraction> {
         Attraction attraction = getItem(position);
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewAttraction);
-        Picasso.with(context).load(attraction.getPhotoURL()).into(imageView);
+        try{
+            Picasso.with(context).load(attraction.getPhotoUrl()).into(imageView);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
 
         TextView textName = (TextView) convertView.findViewById(R.id.txtName);
         textName.setText(attraction.getName());

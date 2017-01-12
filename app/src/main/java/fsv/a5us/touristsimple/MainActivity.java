@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +17,14 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.contentful.java.cda.CDAArray;
+import com.contentful.java.cda.CDACallback;
+import com.contentful.java.cda.CDAClient;
+import com.contentful.java.cda.CDAEntry;
+import com.contentful.java.cda.CDAResource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +53,11 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy =
+                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
         attractions = new ArrayList<>();
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView = (ListView) findViewById(R.id.listViewAttractions);
@@ -83,12 +95,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void LoadAttractions(){
-        mProgressBar.setVisibility(View.VISIBLE);
         if( isOnline() ){
-            ReadJSON task = new ReadJSON();
-            task.execute("https://quarkbackend.com/getfile/tbuslowski/json1");
-        } else{
-            mProgressBar.setVisibility(View.GONE);
+            LoadCMS task = new LoadCMS();
+            task.execute();
+            //ReadJSON task = new ReadJSON();
+            //task.execute("https://quarkbackend.com/getfile/tbuslowski/json1");
+        } else {
             Toast.makeText(MainActivity.this.getApplicationContext(), "Aby pobrać zdjęcia, musisz się połączyć z siecią.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -99,67 +111,43 @@ public class MainActivity extends AppCompatActivity {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    class ReadJSON extends AsyncTask<String, Integer, String>{
-
+    class LoadCMS extends AsyncTask<Void, Void, Void>{
         @Override
-        protected String doInBackground(String... params) {
-            return readURL(params[0]);
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected void onPostExecute(String content) {
-            try {
-                JSONObject jsonObject = new JSONObject(content);
-                JSONArray jsonArray = jsonObject.getJSONArray("attraction");
-                for(int i=0; i<jsonArray.length(); i++){
-                    JSONObject attractionObject = jsonArray.getJSONObject(i);
-                    attractions.add(new Attraction(
-                            attractionObject.getString("attractionType"),
-                            attractionObject.getString("name"),
-                            attractionObject.getString("shortDescription"),
-                            attractionObject.getString("longDescription"),
-                            attractionObject.getString("photoURL")
-                    ));
-                }
+        protected Void doInBackground(Void... params) {
+            CDAClient client;
+            client = CDAClient.builder()
+                    .setSpace("4o6al86apcwg")
+                    .setToken("293cbb4fce22f7a74f71cce1aa4bdaa544d0832e29ecc19d748c4a19945997b8")
+                    .build();
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+            CDAArray result = client.fetch(CDAEntry.class).all();
+
+            for (CDAResource a : result.items()) {
+                CDAEntry attraction = client.fetch(CDAEntry.class).one(a.id());
+                attractions.add(new Attraction(
+                        attraction.getField("attractionType").toString(),
+                        attraction.getField("name").toString(),
+                        attraction.getField("shortDescription").toString(),
+                        attraction.getField("longDescription").toString(),
+                        attraction.getField("photoUrl").toString()
+                ));
             }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.custom_list_layout, attractions);
             listView.setAdapter(adapter);
             mProgressBar.setVisibility(View.GONE);
             Toast.makeText(MainActivity.this.getApplicationContext(), "Znalazłem " + attractions.size() + " atrakcje.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-
-    private static String readURL(String jsonUrl){
-        StringBuilder content = new StringBuilder();
-        HttpURLConnection connection = null;
-        try{
-            URL dataUrl = new URL(jsonUrl);
-            connection = (HttpURLConnection) dataUrl.openConnection();
-            connection.connect();
-            int status = connection.getResponseCode();
-            if( status == 200 ){
-                InputStream is = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                String line;
-                while( (line = reader.readLine()) != null ){
-                    content = content.append(line + "\n");
-                }
-            }
-        } catch (MalformedURLException e){
-            e.printStackTrace();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-        catch (NullPointerException e){
-            e.printStackTrace();
-        } finally {
-            connection.disconnect();
-        }
-        return content.toString();
     }
 }

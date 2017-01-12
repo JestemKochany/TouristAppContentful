@@ -48,10 +48,17 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attraction_details);
 
         attraction = (Attraction) getIntent().getSerializableExtra("attraction");
-        Log.d("Recieved attraction: ", attraction.getPhotoURL());
+        Log.d("Recieved attraction: ", attraction.getPhotoUrl());
 
         imageView = (ImageView) findViewById(R.id.imageViewAttratcionDetails);
-        Picasso.with(this).load(attraction.getPhotoURL()).into(imageView);
+        Log.d("photoUrl", attraction.getPhotoUrl());
+        try{
+            Picasso.with(this).load(attraction.getPhotoUrl()).into(imageView);
+        }catch(Exception e){
+            e.printStackTrace();
+            imageView.setImageResource(R.mipmap.ic_launcher);
+        }
+
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         int pixel = bitmap.getPixel(1, bitmap.getHeight() - 10);
 

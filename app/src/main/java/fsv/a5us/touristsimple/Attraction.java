@@ -12,14 +12,14 @@ public class Attraction implements Serializable{
     private String name;
     private String shortDescription;
     private String longDescription;
-    private String photoURL;
+    private String photoUrl;
 
-    public String getPhotoURL() {
-        return photoURL;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setPhotoURL(String photoURL) {
-        this.photoURL = photoURL;
+    public void setPhotoURL(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getLongDescription() {
@@ -54,12 +54,12 @@ public class Attraction implements Serializable{
         this.attractionType = attractionType;
     }
 
-    public Attraction(String attractionType, String name, String shortDescription, String longDescription, String photoURL) {
+    public Attraction(String attractionType, String name, String shortDescription, String longDescription, String photoUrl) {
         this.attractionType = attractionType;
         this.name = name;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
-        this.photoURL = photoURL;
+        this.photoUrl = photoUrl;
     }
 
 

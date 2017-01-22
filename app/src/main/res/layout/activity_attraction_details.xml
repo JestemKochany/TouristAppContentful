@@ -5,98 +5,157 @@
     android:id="@+id/activity_attraction_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/aMinusMargin"
+    android:layout_marginRight="@dimen/aMinusMargin"
+    android:layout_marginTop="@dimen/aMinusMargin"
     android:paddingBottom="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="fsv.a5us.touristsimple.AttractionDetailsActivity"
-    android:layout_marginLeft="@dimen/aMinusMargin"
-    android:layout_marginTop="@dimen/aMinusMargin"
-    android:layout_marginRight="@dimen/aMinusMargin"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context="fsv.a5us.touristsimple.AttractionDetailsActivity">
 
 
-    <ImageButton
-        android:id="@+id/ImageButton2"
-        android:layout_width="40sp"
-        android:layout_height="40sp"
-        android:src="@drawable/ic_info_black"
-        android:layout_below="@+id/frameLayoutAttratcionDetails"
-        android:layout_centerHorizontal="true"
-        android:background="@null"
-        android:onClick="onClickInfo"
-        android:scaleType="fitXY"
-        android:tint="@color/main"/>
-
-    <FrameLayout
-        android:id="@+id/frameLayoutAttratcionDetails"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_weight="1.0"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:onClick="onClickImage">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textViewNameAttratcionDetails"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Attraction name"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_gravity="center|bottom"
-            android:textSize="30sp" />
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imageViewAttratcionDetails"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"/>
 
-    </FrameLayout>
+            <FrameLayout
+                android:id="@+id/frameLayoutAttratcionDetails"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="1.0"
+                android:onClick="onClickImage">
 
-    <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:tint="@color/gray"
-        android:src="@drawable/ic_place_black"
-        android:id="@+id/ImageButton3"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:layout_below="@+id/frameLayoutAttratcionDetails"
-        android:layout_toEndOf="@+id/ImageButton2"
-        android:layout_marginStart="65dp"
-        android:onClick="onClickMap" />
+                <ImageView
+                    android:id="@+id/imageViewAttratcionDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/textViewAttractionLongDesc"
-        android:layout_marginRight="10sp"
-        android:layout_marginLeft="10sp"
-        android:textSize="20sp"
-        android:textColor="@color/black_overlay"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/ImageButton2" />
+                <TextView
+                    android:id="@+id/textViewNameAttratcionDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/ImageButton2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center|bottom"
+                    android:text="Attraction name"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="30sp"
+                    android:scrollHorizontally="true"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-    <ImageButton
-        android:layout_width="40sp"
-        android:layout_height="40sp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_photo_camera_black"
-        android:id="@+id/ImageButton1"
-        android:layout_marginEnd="65dp"
-        android:background="@null"
-        android:elevation="0dp"
-        android:tint="@color/gray"
-        android:adjustViewBounds="false"
-        android:onClick="onClickCamera"
-        android:layout_below="@+id/frameLayoutAttratcionDetails"
-        android:layout_toStartOf="@+id/ImageButton2" />
+            </FrameLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/frameLayoutAttratcionDetails"
+                android:id="@+id/myFragment"
+                android:background="@color/bluesky" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="1"
+                android:background="@color/white"
+                android:layout_below="@+id/myFragment"
+                android:layout_alignParentStart="true"
+                android:id="@+id/buttonsGridLayout">
+
+                <ImageButton
+                    android:id="@+id/ImageButton1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignStart="@+id/textViewAttractionLongDesc"
+                    android:layout_below="@+id/frameLayoutAttratcionDetails"
+                    android:onClick="onClickCamera"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_photo_camera_black"
+                    android:tint="@color/gray"
+                    android:background="@null"
+                    android:layout_column="0"
+                    android:layout_row="0"
+                    android:layout_marginLeft="65dp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+                <ImageButton
+                    android:id="@+id/ImageButton2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/frameLayoutAttratcionDetails"
+                    android:layout_centerHorizontal="true"
+                    android:background="@null"
+                    android:onClick="onClickInfo"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_info_black"
+                    android:tint="@color/main"
+                    android:layout_column="1"
+                    android:layout_row="0"
+                    android:layout_gravity="center_horizontal"/>
+
+                <ImageButton
+                    android:id="@+id/ImageButton3"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/frameLayoutAttratcionDetails"
+                    android:layout_toEndOf="@+id/ImageButton2"
+                    android:background="@null"
+                    android:onClick="onClickMap"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_place_black"
+                    android:tint="@color/gray"
+                    android:layout_column="2"
+                    android:layout_row="0"
+                    android:layout_marginRight="65dp"
+                    android:layout_gravity="center_vertical"/>
+
+            </GridLayout>
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/buttonsGridLayout"
+                android:layout_alignParentStart="true"
+                android:id="@+id/textViewAttractionLongDesc"
+                android:layout_marginRight="10sp"
+                android:layout_marginLeft="10sp"
+                android:textSize="20sp"
+                android:textColor="@color/gray"
+                android:gravity="fill_horizontal"
+                android:visibility="invisible"
+                android:ellipsize="end" />
+
+            <Button
+                android:text="Take photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/mainBrighter"
+                android:layout_marginStart="21dp"
+                android:layout_marginTop="17dp"
+                android:layout_below="@+id/buttonsGridLayout"
+                android:layout_alignStart="@+id/textViewAttractionLongDesc"
+                android:visibility="invisible"
+                android:id="@+id/buttonTakePhoto"
+                android:onClick="onClickTakePhoto" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

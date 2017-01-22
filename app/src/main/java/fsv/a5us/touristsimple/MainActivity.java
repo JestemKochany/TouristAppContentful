@@ -40,33 +40,45 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import static fsv.a5us.touristsimple.R.drawable.ic_refresh_white;
+
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Attraction> attractions;
     ListView listView;
     ProgressBar mProgressBar;
+    GlobalClass global;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy =
                     new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        attractions = new ArrayList<>();
+        global = (GlobalClass) getApplicationContext();
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView = (ListView) findViewById(R.id.listViewAttractions);
+        attractions = global.getAttractions();
+        if( attractions.size() < 1 ) {
+            LoadAttractions();
+            global.setAttractions(attractions);
+        } else {
+            CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.custom_list_layout, attractions);
+            listView.setAdapter(adapter);
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Klik position: " + position, view.toString());
-
+                //Log.d("Klik position: " + position, view.toString());
                 Intent ActivityAttractionDetails = new Intent(MainActivity.this,AttractionDetailsActivity.class);
                 Attraction clickedAttraction = attractions.get(position);
                 ActivityAttractionDetails.putExtra("attraction", clickedAttraction);
@@ -74,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        LoadAttractions();
     }
 
     @Override
@@ -88,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        global.setAttractions(new ArrayList<Attraction>());
+        attractions = global.getAttractions();
         attractions.clear();
         listView.setAdapter(null);
         LoadAttractions();
@@ -98,10 +110,8 @@ public class MainActivity extends AppCompatActivity {
         if( isOnline() ){
             LoadCMS task = new LoadCMS();
             task.execute();
-            //ReadJSON task = new ReadJSON();
-            //task.execute("https://quarkbackend.com/getfile/tbuslowski/json1");
         } else {
-            Toast.makeText(MainActivity.this.getApplicationContext(), "Aby pobrać zdjęcia, musisz się połączyć z siecią.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this.getApplicationContext(), "Aby pobrać atrakcje, musisz połączyć się z siecią.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -144,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            mProgressBar.setVisibility(View.GONE);
             CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.custom_list_layout, attractions);
             listView.setAdapter(adapter);
-            mProgressBar.setVisibility(View.GONE);
             Toast.makeText(MainActivity.this.getApplicationContext(), "Znalazłem " + attractions.size() + " atrakcje.", Toast.LENGTH_SHORT).show();
         }
     }

@@ -14,30 +14,73 @@
         android:layout_marginLeft="5dp"
         android:scaleType="centerCrop" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="15dp"
+        android:columnCount="2"
+        android:rowCount="2" >
 
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:textSize="20sp"
-            android:textColor="#1c1c3e"
-            android:text="Attraction name"/>
+            android:layout_marginTop="17dp"
+            android:textSize="20dp"
+            android:textColor="@color/myBlack"
+            android:text="Attraction name"
+            android:scrollHorizontally="true"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_gravity="left|fill"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/txtDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:textSize="14sp"
-            android:textColor="#565656"
-            android:text="Attraction description"/>
+            android:textSize="14dp"
+            android:textColor="@color/silver"
+            android:text="Attraction description"
+            android:scrollHorizontally="true"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_gravity="left|fill"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_gravity="right|clip_horizontal"
+            android:src="@drawable/ic_empty"
+            android:id="@+id/imageViewType"
+            android:tint="@color/gray"
+            android:background="@null"
+            />
+
+        <TextView
+            android:id="@+id/txtDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:textSize="15sp"
+            android:textColor="@color/mainBrighter"
+            android:text="2 km"
+            android:scrollHorizontally="true"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_gravity="right|clip_horizontal"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+
+    </GridLayout>
+
 </LinearLayout>

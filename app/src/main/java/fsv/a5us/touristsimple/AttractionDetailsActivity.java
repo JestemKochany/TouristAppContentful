@@ -8,12 +8,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.MapView;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -33,6 +36,10 @@ public class AttractionDetailsActivity extends AppCompatActivity {
     ImageButton buttonInfo;
     ImageButton buttonCamera;
     ImageButton buttonMap;
+    MapView mapView;
+    Button buttonTakePhoto;
+    Uri photoPath;
+    ImageView takenPhoto;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -72,6 +79,11 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         buttonInfo = (ImageButton) findViewById(R.id.ImageButton2);
         buttonCamera = (ImageButton) findViewById(R.id.ImageButton1);
         buttonMap = (ImageButton) findViewById(R.id.ImageButton3);
+        buttonTakePhoto = (Button) findViewById(R.id.buttonTakePhoto);
+        //mapView = (MapView) findViewById(R.id.mapView);
+
+        textViewLongDesc.setVisibility(View.VISIBLE);
+        //mapView.setVisibility(View.INVISIBLE);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
@@ -89,29 +101,45 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onClickInfo(View view) {
-        textViewLongDesc.setText(attraction.getLongDescription());
-        buttonInfo.setColorFilter(Color.parseColor("#7649A7"));
-        buttonCamera.setColorFilter(Color.GRAY);
-        buttonMap.setColorFilter(Color.GRAY);
-
-        //textViewLongDesc.setVisibility(View.VISIBLE);
-    }
-
     public void onClickImage(View view) {
 
     }
 
     public void onClickCamera(View view) {
-        buttonInfo.setColorFilter(Color.GRAY);
+        buttonInfo.setColorFilter(Color.parseColor("#A1A1A1"));
         buttonCamera.setColorFilter(Color.parseColor("#7649A7"));
-        buttonMap.setColorFilter(Color.GRAY);
+        buttonMap.setColorFilter(Color.parseColor("#A1A1A1"));
+
+        buttonTakePhoto.setVisibility(View.VISIBLE);
+        textViewLongDesc.setVisibility(View.INVISIBLE);
+        //mapView.setVisibility(View.INVISIBLE);
+    }
+
+    public void onClickInfo(View view) {
+        textViewLongDesc.setText(attraction.getLongDescription());
+        buttonInfo.setColorFilter(Color.parseColor("#7649A7"));
+        buttonCamera.setColorFilter(Color.parseColor("#A1A1A1"));
+        buttonMap.setColorFilter(Color.parseColor("#A1A1A1"));
+
+        buttonTakePhoto.setVisibility(View.INVISIBLE);
+        textViewLongDesc.setVisibility(View.VISIBLE);
+        //mapView.setVisibility(View.INVISIBLE);
     }
 
     public void onClickMap(View view) {
 
-        buttonInfo.setColorFilter(Color.GRAY);
-        buttonCamera.setColorFilter(Color.GRAY);
+        buttonInfo.setColorFilter(Color.parseColor("#A1A1A1"));
+        buttonCamera.setColorFilter(Color.parseColor("#A1A1A1"));
         buttonMap.setColorFilter(Color.parseColor("#7649A7"));
+
+        buttonTakePhoto.setVisibility(View.INVISIBLE);
+        textViewLongDesc.setVisibility(View.INVISIBLE);
+        //mapView.setVisibility(View.VISIBLE);
+    }
+
+    public void onClickTakePhoto(View view) {
+
+
+
     }
 }

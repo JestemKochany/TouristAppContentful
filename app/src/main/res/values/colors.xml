@@ -7,5 +7,16 @@
     <color name="black_overlay">#66000000</color>
 
     <color name="main">#7649A7</color>
+    <color name="mainBrighter">#9E72A5</color>
     <color name="gray">#A1A1A1</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="whitebg">#FFF3F3F3</color>
+
+    <color name="silver">#565656</color>
+    <color name="myBlack">#1c1c3e</color>
+
+
+    <color name="bluesky">#A9C8DC</color>
+
 </resources>

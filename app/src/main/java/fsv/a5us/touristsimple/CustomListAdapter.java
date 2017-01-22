@@ -51,9 +51,28 @@ public class CustomListAdapter extends ArrayAdapter<Attraction> {
             e.printStackTrace();
         }
 
-
+        ImageView type = (ImageView) convertView.findViewById(R.id.imageViewType);
+        switch (attraction.getAttractionType()){
+            case "food":
+                type.setImageResource(R.drawable.ic_food);
+                break;
+            case "museum":
+                type.setImageResource(R.drawable.ic_museum);
+                break;
+            case "entertaiment":
+                type.setImageResource(R.drawable.ic_entertaiment);
+                break;
+            /*// NIE TRZEBA USTAWIAC IKONKI "NIEDOSTEPNE'
+                 PONIEWAZ TA IKONKA JEST WSTAWIANA AUTOMATYCZNIE DLA KAZDEGO ELELMTU LISTY
+                 layout/custom_list_layout.xml(63 linia)*/
+            /*case "empty":
+            default:
+                type.setImageResource(R.drawable.ic_empty);
+                break;*/
+        }
         TextView textName = (TextView) convertView.findViewById(R.id.txtName);
         textName.setText(attraction.getName());
+
 
         TextView textDesc = (TextView) convertView.findViewById(R.id.txtDesc);
         textDesc.setText(attraction.getShortDescription());

@@ -1,5 +1,6 @@
 package fsv.a5us.touristsimple;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothClass;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,14 +34,19 @@ public class AttractionDetailsActivity extends AppCompatActivity {
 
     Attraction attraction;
     TextView textViewLongDesc;
+    TextView attractionName;
     ImageView imageView;
     ImageButton buttonInfo;
     ImageButton buttonCamera;
     ImageButton buttonMap;
     MapView mapView;
     Button buttonTakePhoto;
-    Uri photoPath;
-    ImageView takenPhoto;
+    ImageView newPhoto;
+    ImageButton shareButton;
+    ImageButton deleteButton;
+    private static final int CAMERA_REQUEST = 1888;
+
+
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -55,13 +62,12 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attraction_details);
 
         attraction = (Attraction) getIntent().getSerializableExtra("attraction");
-        Log.d("Recieved attraction: ", attraction.getPhotoUrl());
-
         imageView = (ImageView) findViewById(R.id.imageViewAttratcionDetails);
-        Log.d("photoUrl", attraction.getPhotoUrl());
+
         try{
             Picasso.with(this).load(attraction.getPhotoUrl()).into(imageView);
         }catch(Exception e){
+            Log.d("Błąd wczytywania linku", "Link pewnie nie dziala");
             e.printStackTrace();
             imageView.setImageResource(R.mipmap.ic_launcher);
         }
@@ -69,23 +75,32 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         int pixel = bitmap.getPixel(1, bitmap.getHeight() - 10);
 
-        TextView textView = (TextView) findViewById(R.id.textViewNameAttratcionDetails);
-        textView.setText(attraction.getName());
-        textView.setTextColor(getContrastColor(pixel));
+        attractionName = (TextView) findViewById(R.id.textViewNameAttratcionDetails);
+        attractionName.setText(attraction.getName());
+        attractionName.setTextColor(getContrastColor(pixel));
 
-        textViewLongDesc = (TextView) findViewById(R.id.textViewAttractionLongDesc);
-        textViewLongDesc.setText(attraction.getLongDescription());
 
+        newPhoto = (ImageView) findViewById(R.id.imageViewNewPhoto);
+        newPhoto.setImageDrawable(null);
         buttonInfo = (ImageButton) findViewById(R.id.ImageButton2);
         buttonCamera = (ImageButton) findViewById(R.id.ImageButton1);
         buttonMap = (ImageButton) findViewById(R.id.ImageButton3);
         buttonTakePhoto = (Button) findViewById(R.id.buttonTakePhoto);
+        textViewLongDesc = (TextView) findViewById(R.id.textViewAttractionLongDesc);
+        textViewLongDesc.setText(attraction.getLongDescription());
+        shareButton = (ImageButton) findViewById(R.id.shareButton);
+        deleteButton = (ImageButton) findViewById(R.id.deleteButton);
         //mapView = (MapView) findViewById(R.id.mapView);
 
         textViewLongDesc.setVisibility(View.VISIBLE);
-        //mapView.setVisibility(View.INVISIBLE);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+
+        buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+        });
     }
 
     public static int getContrastColor(int color) {
@@ -110,9 +125,18 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         buttonCamera.setColorFilter(Color.parseColor("#7649A7"));
         buttonMap.setColorFilter(Color.parseColor("#A1A1A1"));
 
-        buttonTakePhoto.setVisibility(View.VISIBLE);
         textViewLongDesc.setVisibility(View.INVISIBLE);
-        //mapView.setVisibility(View.INVISIBLE);
+        if(newPhoto.getDrawable() == null){
+            buttonTakePhoto.setVisibility(View.VISIBLE);
+            shareButton.setVisibility(View.INVISIBLE);
+            deleteButton.setVisibility(View.INVISIBLE);
+            newPhoto.setVisibility(View.INVISIBLE);
+        }else{
+            buttonTakePhoto.setVisibility(View.INVISIBLE);
+            shareButton.setVisibility(View.VISIBLE);
+            deleteButton.setVisibility(View.VISIBLE);
+            newPhoto.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onClickInfo(View view) {
@@ -122,7 +146,11 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         buttonMap.setColorFilter(Color.parseColor("#A1A1A1"));
 
         buttonTakePhoto.setVisibility(View.INVISIBLE);
+        shareButton.setVisibility(View.INVISIBLE);
+        deleteButton.setVisibility(View.INVISIBLE);
+        buttonTakePhoto.setVisibility(View.INVISIBLE);
         textViewLongDesc.setVisibility(View.VISIBLE);
+        newPhoto.setVisibility(View.INVISIBLE);
         //mapView.setVisibility(View.INVISIBLE);
     }
 
@@ -133,13 +161,32 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         buttonMap.setColorFilter(Color.parseColor("#7649A7"));
 
         buttonTakePhoto.setVisibility(View.INVISIBLE);
+        shareButton.setVisibility(View.INVISIBLE);
+        deleteButton.setVisibility(View.INVISIBLE);
+        buttonTakePhoto.setVisibility(View.INVISIBLE);
         textViewLongDesc.setVisibility(View.INVISIBLE);
+        newPhoto.setVisibility(View.INVISIBLE);
         //mapView.setVisibility(View.VISIBLE);
     }
 
-    public void onClickTakePhoto(View view) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        if(requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK){
+            buttonTakePhoto.setVisibility(View.INVISIBLE);
+            shareButton.setVisibility(View.VISIBLE);
+            deleteButton.setVisibility(View.VISIBLE);
+            newPhoto.setVisibility(View.VISIBLE);
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            newPhoto.setImageBitmap(photo);
+        }
+    }
 
-
+    public void onCliockDelete(View view) {
+        newPhoto.setImageDrawable(null);
+        buttonTakePhoto.setVisibility(View.VISIBLE);
+        shareButton.setVisibility(View.INVISIBLE);
+        deleteButton.setVisibility(View.INVISIBLE);
+        newPhoto.setVisibility(View.INVISIBLE);
     }
 }

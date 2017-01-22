@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="black">#000000</color>
 
     <color name="main">#7649A7</color>
     <color name="mainBrighter">#9E72A5</color>

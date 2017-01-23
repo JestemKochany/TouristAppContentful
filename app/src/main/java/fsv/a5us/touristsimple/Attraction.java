@@ -1,24 +1,53 @@
 package fsv.a5us.touristsimple;
 
+import android.location.Location;
+
 import java.io.Serializable;
 
 /**
  * Created by A5US on 06.01.2017.
  */
 
-public class Attraction implements Serializable{
+public class Attraction implements Serializable {
 
     private String attractionType;
     private String name;
     private String shortDescription;
     private String longDescription;
     private String photoUrl;
+    private float longtitude;
+    private float latitude;
+    private float distacne;
+
+    public float getDistacne() {
+        return distacne;
+    }
+
+    public void setDistacne(float distacne) {
+        this.distacne = distacne;
+    }
+
+    public float getLongtitude() {
+        return longtitude;
+    }
+
+    public void setLongtitude(float longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
 
     public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoURL(String photoUrl) {
+    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 
@@ -54,15 +83,14 @@ public class Attraction implements Serializable{
         this.attractionType = attractionType;
     }
 
-    public Attraction(String attractionType, String name, String shortDescription, String longDescription, String photoUrl) {
+    public Attraction(String attractionType, String name, String shortDescription, String longDescription, String photoUrl, float longtitude, float latitude, float distance) {
         this.attractionType = attractionType;
         this.name = name;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.photoUrl = photoUrl;
+        this.longtitude = longtitude;
+        this.latitude = latitude;
+        this.distacne = distance;
     }
-
-
-
-
 }

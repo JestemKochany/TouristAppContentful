@@ -2,11 +2,13 @@ package fsv.a5us.touristsimple;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ public class CustomListAdapter extends ArrayAdapter<Attraction> {
     List<Attraction> attractions;
     Context context;
     int resource;
+    GridLayout gridLayout;
 
     public CustomListAdapter(Context context, int resource, List<Attraction> attractions) {
         super(context, resource, attractions);
@@ -62,17 +65,13 @@ public class CustomListAdapter extends ArrayAdapter<Attraction> {
             case "entertaiment":
                 type.setImageResource(R.drawable.ic_entertaiment);
                 break;
-            /*// NIE TRZEBA USTAWIAC IKONKI "NIEDOSTEPNE'
-                 PONIEWAZ TA IKONKA JEST WSTAWIANA AUTOMATYCZNIE DLA KAZDEGO ELELMTU LISTY
-                 layout/custom_list_layout.xml(63 linia)*/
-            /*case "empty":
-            default:
-                type.setImageResource(R.drawable.ic_empty);
-                break;*/
         }
+
+        TextView textDistance = (TextView) convertView.findViewById(R.id.txtDistance);
+        textDistance.setText(attraction.getDistacne() + "  km");
+
         TextView textName = (TextView) convertView.findViewById(R.id.txtName);
         textName.setText(attraction.getName());
-
 
         TextView textDesc = (TextView) convertView.findViewById(R.id.txtDesc);
         textDesc.setText(attraction.getShortDescription());

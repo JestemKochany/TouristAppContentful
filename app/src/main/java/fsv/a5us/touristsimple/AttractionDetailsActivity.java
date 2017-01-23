@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.MapView;
@@ -79,7 +80,6 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         attractionName.setText(attraction.getName());
         attractionName.setTextColor(getContrastColor(pixel));
 
-
         newPhoto = (ImageView) findViewById(R.id.imageViewNewPhoto);
         newPhoto.setImageDrawable(null);
         buttonInfo = (ImageButton) findViewById(R.id.ImageButton2);
@@ -101,6 +101,8 @@ public class AttractionDetailsActivity extends AppCompatActivity {
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
         });
+
+        Toast.makeText(this.getApplicationContext(), "Location: " + attraction.getLongtitude() + " " + attraction.getLatitude(), Toast.LENGTH_SHORT).show();
     }
 
     public static int getContrastColor(int color) {

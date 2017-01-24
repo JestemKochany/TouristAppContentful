@@ -68,7 +68,19 @@ public class CustomListAdapter extends ArrayAdapter<Attraction> {
         }
 
         TextView textDistance = (TextView) convertView.findViewById(R.id.txtDistance);
-        textDistance.setText(attraction.getDistacne() + "  km");
+        // formatowanie km albo m
+        if( attraction.getDistacne() == 9999.0 ){
+            textDistance.setText("");
+        }
+        else if(attraction.getDistacne() >= 100.0){
+            textDistance.setText((int)MainActivity.round(attraction.getDistacne(),0) + " km");
+        }
+        else if(attraction.getDistacne() <= 1.0){
+            textDistance.setText((int)MainActivity.round(attraction.getDistacne()*1000,0) + " m");
+        } else {
+            textDistance.setText(MainActivity.round(attraction.getDistacne(),1) + " km");
+        }
+
 
         TextView textName = (TextView) convertView.findViewById(R.id.txtName);
         textName.setText(attraction.getName());

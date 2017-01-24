@@ -1,9 +1,11 @@
 package fsv.a5us.touristsimple;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -31,6 +33,7 @@ import com.contentful.java.cda.CDAResource;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationListener;
@@ -43,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest locationRequest;
-    private FusedLocationProviderApi locationProviderApi = LocationServices.FusedLocationApi;
     private Double mLatitude;
     private Double mLongitude;
     private Location mLastLocation;
@@ -75,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     .build();
         }
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(2 * 1000); // 2 secs
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(1 * 1000); // 2 secs
+        locationRequest.setFastestInterval(500);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         global = (GlobalClass) getApplicationContext();
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 LoadAttractions();
                 break;
             case R.id.itemGps:
+                onLocationChanged(mLastLocation);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -186,14 +189,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mLongitude = location.getLongitude();
         for(Attraction a: attractions){
             float [] dist = new float[1];
-            Log.d("Moja pozycja: ", mLatitude + " " + mLongitude);
-            Log.d("Odcz pozycja: ", a.getLatitude() + " " + a.getLongitude());
             Location.distanceBetween(location.getLatitude(), location.getLongitude(), a.getLatitude(), a.getLongitude(), dist);
-            a.setDistacne(round(dist[0]/1000, 1));
+            float res = dist[0]/1000;
+            a.setDistacne(round(res, 3));
         }
         CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.custom_list_layout, attractions);
         listView.setAdapter(adapter);
-        Log.d("requestLocation", "Updated");
+        Toast.makeText(MainActivity.this.getApplicationContext(), "Location updated.", Toast.LENGTH_SHORT).show();
     }
 
     class LoadCMS extends AsyncTask<Void, Void, Void>{
@@ -205,6 +207,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         @Override
         protected Void doInBackground(Void... params) {
+            while(!mGoogleApiClient.isConnected()){
+                mGoogleApiClient.connect();
+            }
             CDAClient client;
             client = CDAClient.builder()
                     .setSpace("4o6al86apcwg")
@@ -215,13 +220,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             for (CDAResource a : result.items()) {
                 CDAEntry attraction = client.fetch(CDAEntry.class).one(a.id());
-                Log.d("Field: ", attraction.getField("coordinate").toString());
                 String loc = attraction.getField("coordinate").toString();
-                Log.d("String loc: ", loc);
                 float lon2 = Float.parseFloat(loc.substring(loc.indexOf("lon=")+4, loc.indexOf(",")));
                 float lat2 = Float.parseFloat(loc.substring(loc.indexOf("lat=")+4, loc.indexOf("}")));
-                float dist;
-                dist = Float.valueOf("9");
+                float dist = Float.valueOf("9999.0");
 
                 attractions.add(new Attraction(
                         attraction.getField("attractionType").toString(),

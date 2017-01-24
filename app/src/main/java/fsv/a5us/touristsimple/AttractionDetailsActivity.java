@@ -1,16 +1,10 @@
 package fsv.a5us.touristsimple;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothClass;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
-import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,18 +12,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.MapView;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class AttractionDetailsActivity extends AppCompatActivity {
 
@@ -102,7 +91,7 @@ public class AttractionDetailsActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this.getApplicationContext(), "Location: " + attraction.getLongtitude() + " " + attraction.getLatitude(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getApplicationContext(), "Location: " + attraction.getLongitude() + " " + attraction.getLatitude(), Toast.LENGTH_SHORT).show();
     }
 
     public static int getContrastColor(int color) {

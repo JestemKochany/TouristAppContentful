@@ -1,7 +1,5 @@
 package fsv.a5us.touristsimple;
 
-import android.location.Location;
-
 import java.io.Serializable;
 
 /**
@@ -15,7 +13,7 @@ public class Attraction implements Serializable {
     private String shortDescription;
     private String longDescription;
     private String photoUrl;
-    private float longtitude;
+    private float longitude;
     private float latitude;
     private float distacne;
 
@@ -27,12 +25,12 @@ public class Attraction implements Serializable {
         this.distacne = distacne;
     }
 
-    public float getLongtitude() {
-        return longtitude;
+    public float getLongitude() {
+        return longitude;
     }
 
-    public void setLongtitude(float longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 
     public float getLatitude() {
@@ -83,13 +81,13 @@ public class Attraction implements Serializable {
         this.attractionType = attractionType;
     }
 
-    public Attraction(String attractionType, String name, String shortDescription, String longDescription, String photoUrl, float longtitude, float latitude, float distance) {
+    public Attraction(String attractionType, String name, String shortDescription, String longDescription, String photoUrl, float longitude, float latitude, float distance) {
         this.attractionType = attractionType;
         this.name = name;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.photoUrl = photoUrl;
-        this.longtitude = longtitude;
+        this.longitude = longitude;
         this.latitude = latitude;
         this.distacne = distance;
     }

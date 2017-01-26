@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     .build();
         }
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(1 * 1000); // 2 secs
-        locationRequest.setFastestInterval(500);
+        locationRequest.setInterval(60 * 1000); // 2 secs
+        locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         global = (GlobalClass) getApplicationContext();
@@ -185,17 +185,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onLocationChanged(Location location) {
         Log.i("onLocationChanged" , "start");
-        mLatitude = location.getLatitude();
-        mLongitude = location.getLongitude();
-        for(Attraction a: attractions){
-            float [] dist = new float[1];
-            Location.distanceBetween(location.getLatitude(), location.getLongitude(), a.getLatitude(), a.getLongitude(), dist);
-            float res = dist[0]/1000;
-            a.setDistacne(round(res, 3));
+        if(location!= null){
+            mLatitude = location.getLatitude();
+            mLongitude = location.getLongitude();
+            for(Attraction a: attractions){
+                float [] dist = new float[1];
+                Location.distanceBetween(location.getLatitude(), location.getLongitude(), a.getLatitude(), a.getLongitude(), dist);
+                float res = dist[0]/1000;
+                a.setDistacne(round(res, 3));
+            }
+            CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.custom_list_layout, attractions);
+            listView.setAdapter(adapter);
+            Toast.makeText(MainActivity.this.getApplicationContext(), "Location updated.", Toast.LENGTH_SHORT).show();
         }
-        CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.custom_list_layout, attractions);
-        listView.setAdapter(adapter);
-        Toast.makeText(MainActivity.this.getApplicationContext(), "Location updated.", Toast.LENGTH_SHORT).show();
+
     }
 
     class LoadCMS extends AsyncTask<Void, Void, Void>{
@@ -251,8 +254,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void LoadAttractions(){
         if( isOnline() ){
-            LoadCMS task = new LoadCMS();
-            task.execute();
+            try{
+                LoadCMS task = new LoadCMS();
+                task.execute();
+            } catch (Exception e){
+                Log.e("Error pobierania", e.toString());
+                Toast.makeText(MainActivity.this.getApplicationContext(), "Błąd pobierania danych.", Toast.LENGTH_SHORT).show();
+            }
+
         } else {
             Toast.makeText(MainActivity.this.getApplicationContext(), "Aby pobrać atrakcje, musisz połączyć się z siecią.", Toast.LENGTH_SHORT).show();
         }

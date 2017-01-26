@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.MapView;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 public class AttractionDetailsActivity extends AppCompatActivity {
 
     Attraction attraction;
@@ -31,9 +35,12 @@ public class AttractionDetailsActivity extends AppCompatActivity {
     ImageButton buttonMap;
     MapView mapView;
     Button buttonTakePhoto;
+    Button buttonOpenMaps;
     ImageView newPhoto;
     ImageButton shareButton;
     ImageButton deleteButton;
+    TextView distanceInfo;
+
     private static final int CAMERA_REQUEST = 1888;
 
 
@@ -53,6 +60,7 @@ public class AttractionDetailsActivity extends AppCompatActivity {
 
         attraction = (Attraction) getIntent().getSerializableExtra("attraction");
         imageView = (ImageView) findViewById(R.id.imageViewAttratcionDetails);
+
 
         try{
             Picasso.with(this).load(attraction.getPhotoUrl()).into(imageView);
@@ -79,19 +87,27 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         textViewLongDesc.setText(attraction.getLongDescription());
         shareButton = (ImageButton) findViewById(R.id.shareButton);
         deleteButton = (ImageButton) findViewById(R.id.deleteButton);
+        buttonOpenMaps = (Button) findViewById(R.id.buttonOpenMaps);
         //mapView = (MapView) findViewById(R.id.mapView);
 
+        distanceInfo = (TextView) findViewById(R.id.distanceInfo);
         textViewLongDesc.setVisibility(View.VISIBLE);
+
 
         buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        try{
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        } catch ( Exception e){
+            e.printStackTrace();
+        }
+
             }
         });
 
-        Toast.makeText(this.getApplicationContext(), "Location: " + attraction.getLongitude() + " " + attraction.getLatitude(), Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this.getApplicationContext(), "Location: " + attraction.getLongitude() + " " + attraction.getLatitude(), Toast.LENGTH_SHORT).show();
     }
 
     public static int getContrastColor(int color) {
@@ -115,19 +131,41 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         buttonInfo.setColorFilter(Color.parseColor("#A1A1A1"));
         buttonCamera.setColorFilter(Color.parseColor("#7649A7"));
         buttonMap.setColorFilter(Color.parseColor("#A1A1A1"));
-
         textViewLongDesc.setVisibility(View.INVISIBLE);
-        if(newPhoto.getDrawable() == null){
-            buttonTakePhoto.setVisibility(View.VISIBLE);
-            shareButton.setVisibility(View.INVISIBLE);
-            deleteButton.setVisibility(View.INVISIBLE);
-            newPhoto.setVisibility(View.INVISIBLE);
-        }else{
-            buttonTakePhoto.setVisibility(View.INVISIBLE);
-            shareButton.setVisibility(View.VISIBLE);
-            deleteButton.setVisibility(View.VISIBLE);
-            newPhoto.setVisibility(View.VISIBLE);
+        buttonOpenMaps.setVisibility(View.INVISIBLE);
+
+
+
+        if(attraction.getDistacne() <= 0.500){
+            distanceInfo.setVisibility(View.INVISIBLE);
+            if(newPhoto.getDrawable() == null){
+                buttonTakePhoto.setVisibility(View.VISIBLE);
+                shareButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
+                newPhoto.setVisibility(View.INVISIBLE);
+            }else {
+                buttonTakePhoto.setVisibility(View.INVISIBLE);
+                shareButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.VISIBLE);
+                newPhoto.setVisibility(View.VISIBLE);
+            }
+        } else{
+            if(newPhoto.getDrawable() == null){
+                distanceInfo.setVisibility(View.VISIBLE);
+                buttonTakePhoto.setVisibility(View.INVISIBLE);
+                shareButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
+                newPhoto.setVisibility(View.INVISIBLE);
+            }else {
+                distanceInfo.setVisibility(View.INVISIBLE);
+                buttonTakePhoto.setVisibility(View.INVISIBLE);
+                shareButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.VISIBLE);
+                newPhoto.setVisibility(View.VISIBLE);
+            }
         }
+
+
     }
 
     public void onClickInfo(View view) {
@@ -136,6 +174,8 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         buttonCamera.setColorFilter(Color.parseColor("#A1A1A1"));
         buttonMap.setColorFilter(Color.parseColor("#A1A1A1"));
 
+        buttonOpenMaps.setVisibility(View.INVISIBLE);
+        distanceInfo.setVisibility(View.INVISIBLE);
         buttonTakePhoto.setVisibility(View.INVISIBLE);
         shareButton.setVisibility(View.INVISIBLE);
         deleteButton.setVisibility(View.INVISIBLE);
@@ -151,13 +191,14 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         buttonCamera.setColorFilter(Color.parseColor("#A1A1A1"));
         buttonMap.setColorFilter(Color.parseColor("#7649A7"));
 
+        distanceInfo.setVisibility(View.INVISIBLE);
         buttonTakePhoto.setVisibility(View.INVISIBLE);
         shareButton.setVisibility(View.INVISIBLE);
         deleteButton.setVisibility(View.INVISIBLE);
         buttonTakePhoto.setVisibility(View.INVISIBLE);
         textViewLongDesc.setVisibility(View.INVISIBLE);
         newPhoto.setVisibility(View.INVISIBLE);
-        //mapView.setVisibility(View.VISIBLE);
+        buttonOpenMaps.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -179,5 +220,21 @@ public class AttractionDetailsActivity extends AppCompatActivity {
         shareButton.setVisibility(View.INVISIBLE);
         deleteButton.setVisibility(View.INVISIBLE);
         newPhoto.setVisibility(View.INVISIBLE);
+    }
+
+    public void onClickMapss(View view) {
+        try{
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + attraction.getLatitude() + "," + attraction.getLongitude()));
+            startActivity(intent);
+        } catch (Exception e){
+            Log.d("errr maps", e.toString());
+        }
+
+    }
+
+    public void onClickShare(View view) {
+        Intent intent=new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+
     }
 }
